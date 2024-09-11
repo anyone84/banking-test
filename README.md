@@ -25,7 +25,7 @@ This is a sample project for a basic banking system using Node.js, TypeScript, a
    git clone <repository-URL>
    cd bank-example
 
-2. Instala las dependencias:
+2. Install the dependencies:
 
    ```bash
    npm install
