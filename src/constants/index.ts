@@ -1,3 +1,4 @@
+// Http status codes
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
@@ -10,13 +11,12 @@ export const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-// Mensajes de error comunes
+// Common error messages
 export const ERROR_MESSAGES = {
-  CLIENT_NOT_FOUND: "Cliente no encontrado",
-  ACCOUNT_NOT_FOUND: "Cuenta no encontrada",
-  MOVEMENT_NOT_FOUND: "Movimiento no encontrado",
-  ACCOUNT_NOT_BELONG_TO_CLIENT:
-    "La cuenta no pertenece al cliente especificado",
-  VALIDATION_FAILED: "El json es invalido",
-  SERVER_ERROR: "Algo ha fallado",
+  CLIENT_NOT_FOUND: "Client not found",
+  ACCOUNT_NOT_FOUND: "Account not found",
+  MOVEMENT_NOT_FOUND: "Movement not found",
+  ACCOUNT_NOT_BELONG_TO_CLIENT: "The account don't belong to the specified user",
+  VALIDATION_FAILED: "Invalid JSON format",
+  SERVER_ERROR: "Something went wrong! :(",
 };

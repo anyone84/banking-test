@@ -1,28 +1,29 @@
-// Import the 'express' module
-import express, { Application } from "express";
-import clientRoutes from "./routes/clientRoutes";
-import accountRoutes from "./routes/accountRoutes";
-import movementRoutes from "./routes/movementRoutes";
-import dotenv from "dotenv";
+import express, { Application } from 'express';
+import clientRoutes from './routes/clientRoutes';
+import accountRoutes from './routes/accountRoutes';
+import movementRoutes from './routes/movementRoutes';
+import dotenv from 'dotenv';
+import { swaggerSpec, swaggerUi } from './swagger';
 
 dotenv.config();
 
-// Create an Express application
 const app: Application = express();
 
-// Set the port number for the server
 const portNumber: number = parseInt(process.env.PORT || "");
 const port: number = Number.isInteger(portNumber) ? portNumber : 3000;
 
-// Middleware para parsear JSON
+// Middleware to parse JSON
 app.use(express.json());
 
-// Rutas
-app.use("/api", clientRoutes);
-app.use("/api", accountRoutes);
-app.use("/api", movementRoutes);
+// Serve Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Iniciar el servidor
+// Routes
+app.use('/api', clientRoutes);
+app.use('/api', accountRoutes);
+app.use('/api', movementRoutes);
+
+// Start the server
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });

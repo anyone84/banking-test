@@ -1,35 +1,46 @@
 import { AccountModel } from "./account";
 
+/**
+ * Interface representing a movement.
+ */
 export interface Movement {
-  id: number;
-  quantity: number; // Positiva o negativa
-  date: number; // Timestamp
-  accountId: number; // Relación con la cuenta
+  id: number;         // Unique identifier for the movement
+  quantity: number;  // Amount of the movement, can be positive or negative
+  date: number;      // Timestamp of the movement
+  accountId: number; // ID of the associated account
 }
 
+/**
+ * Class responsible for managing movements.
+ */
 export class MovementModel {
-  private static movements: Movement[] = [];
+  private static movements: Movement[] = []; // In-memory storage for movements
 
+  /**
+   * Validates the given movement data.
+   * 
+   * @param movement - Partial movement object to validate.
+   * @returns A boolean indicating whether the movement data is valid.
+   */
   static validate(movement: Partial<Movement>): boolean {
-    if (
-      movement.quantity === undefined ||
-      typeof movement.quantity !== "number"
-    ) {
+    if (movement.quantity === undefined || typeof movement.quantity !== "number") {
       return false;
     }
-    if (
-      !movement.date ||
-      (typeof movement.date !== "number") ||
-      (new Date(movement.date)).getTime() <= 0
-    ) {
+    if (!movement.date || typeof movement.date !== "number" || (new Date(movement.date)).getTime() <= 0) {
       return false;
     }
-    if (!movement.accountId || typeof movement.accountId !== "number") {
+    if (!movement.accountId || typeof movement.accountId !== "number" || !AccountModel.findById(movement.accountId)) {
       return false;
     }
     return true;
   }
 
+  /**
+   * Finds movements associated with a specific account ID.
+   * 
+   * @param accountId - The ID of the account to find movements for.
+   * @returns An array of movements associated with the specified account ID.
+   */
   static findByAccountId(accountId: number): Movement[] {
     return JSON.parse(JSON.stringify(
       MovementModel.movements.filter(
@@ -38,11 +49,23 @@ export class MovementModel {
     ));
   }
 
+  /**
+   * Finds a movement by its unique identifier.
+   * 
+   * @param id - The ID of the movement to find.
+   * @returns The movement with the given ID, or undefined if not found.
+   */
   static findById(id: number): Movement | undefined {
-    const movement: Movement | undefined = MovementModel.movements.find((movement) => movement.id === id)
+    const movement: Movement | undefined = MovementModel.movements.find((movement) => movement.id === id);
     return movement ? JSON.parse(JSON.stringify(movement)) : movement;
   }
 
+  /**
+   * Creates a new movement with the provided data. 
+   * 
+   * @param movementData - The data to create the new movement.
+   * @returns The newly created movement, or undefined if validation fails.
+   */
   static create(movementData: any): Movement | undefined {
     const date: number = Date.now();
     
@@ -62,8 +85,14 @@ export class MovementModel {
     return JSON.parse(JSON.stringify(newMovement));
   }
 
+  /**
+   * Deletes a movement by its unique identifier.
+   * 
+   * @param id - The ID of the movement to delete.
+   * @returns A boolean indicating whether the movement was successfully deleted.
+   */
   static delete(id: number): boolean {
-    const index = MovementModel.movements.findIndex(
+    const index: number = MovementModel.movements.findIndex(
       (movement) => movement.id === id
     );
     if (index !== -1) {

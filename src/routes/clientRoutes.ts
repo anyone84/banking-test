@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { 
   getClients, 
   getClientById, 
@@ -9,19 +9,219 @@ import {
 import { getAccountsByClientId, createAccount } from '../controllers/accountController';
 import { getMovementsForClientAccount } from '../controllers/movementController';
 
-const router = express.Router();
+const router = Router();
 
-// Rutas para el CRUD
-router.get('/clients', getClients); // Obtener todos los clientes
-router.get('/clients/:id', getClientById); // Obtener un cliente por ID
-router.post('/clients', createClient); // Crear un nuevo cliente
-router.put('/clients/:id', updateClient); // Actualizar un cliente existente
-router.delete('/clients/:id', deleteClient); // Eliminar un cliente
+/**
+ * @swagger
+ * tags:
+ *   name: Clients
+ *   description: Operations related to clients
+ */
 
-router.get('/clients/:clientId/accounts', getAccountsByClientId);  // Obtener todas las cuentas de un cliente
-router.post('/clients/:clientId/accounts', createAccount);         // Crear una cuenta para un cliente
+/**
+ * @swagger
+ * /clients:
+ *   get:
+ *     summary: Get all clients
+ *     tags: [Clients]
+ *     responses:
+ *       200:
+ *         description: List of all clients
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Client'
+ */
+router.get('/clients', getClients);
 
+/**
+ * @swagger
+ * /clients/{id}:
+ *   get:
+ *     summary: Get a client by ID
+ *     tags: [Clients]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The client ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: The client with the specified ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Client'
+ *       404:
+ *         description: Client not found
+ */
+router.get('/clients/:id', getClientById);
+
+/**
+ * @swagger
+ * /clients:
+ *   post:
+ *     summary: Create a new client
+ *     tags: [Clients]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Client'
+ *     responses:
+ *       201:
+ *         description: The created client
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Client'
+ *       400:
+ *         description: Invalid input
+ */
+router.post('/clients', createClient);
+
+/**
+ * @swagger
+ * /clients/{id}:
+ *   put:
+ *     summary: Update an existing client
+ *     tags: [Clients]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The client ID
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Client'
+ *     responses:
+ *       200:
+ *         description: The updated client
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Client'
+ *       404:
+ *         description: Client not found
+ */
+router.put('/clients/:id', updateClient);
+
+/**
+ * @swagger
+ * /clients/{id}:
+ *   delete:
+ *     summary: Delete a client
+ *     tags: [Clients]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The client ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Client deleted
+ *       404:
+ *         description: Client not found
+ */
+router.delete('/clients/:id', deleteClient);
+
+/**
+ * @swagger
+ * /clients/{clientId}/accounts:
+ *   get:
+ *     summary: Get all accounts for a client
+ *     tags: [Clients]
+ *     parameters:
+ *       - name: clientId
+ *         in: path
+ *         required: true
+ *         description: The client ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of accounts for the specified client
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Account'
+ */
+router.get('/clients/:clientId/accounts', getAccountsByClientId);
+
+/**
+ * @swagger
+ * /clients/{clientId}/accounts:
+ *   post:
+ *     summary: Create an account for a client
+ *     tags: [Clients]
+ *     parameters:
+ *       - name: clientId
+ *         in: path
+ *         required: true
+ *         description: The client ID
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Account'
+ *     responses:
+ *       201:
+ *         description: The created account
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Account'
+ *       400:
+ *         description: Invalid input
+ */
+router.post('/clients/:clientId/accounts', createAccount);
+
+/**
+ * @swagger
+ * /clients/{clientId}/accounts/{accountId}/movements:
+ *   get:
+ *     summary: Get all movements for a client's account
+ *     tags: [Clients]
+ *     parameters:
+ *       - name: clientId
+ *         in: path
+ *         required: true
+ *         description: The client ID
+ *         schema:
+ *           type: integer
+ *       - name: accountId
+ *         in: path
+ *         required: true
+ *         description: The account ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of movements for the specified account
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Movement'
+ */
 router.get('/clients/:clientId/accounts/:accountId/movements', getMovementsForClientAccount);
-
 
 export default router;

@@ -1,11 +1,18 @@
-// src/controllers/movementController.ts
 import { Request, Response } from "express";
 import { AccountModel, Account } from "../models/account";
 import { MovementModel, Movement } from "../models/movement";
 import { ClientModel, Client } from "../models/client";
 import { HTTP_STATUS, ERROR_MESSAGES } from "../constants";
 
-// Obtener todos los movimientos de una cuenta
+/**
+ * Get all movements for a specific account.
+ * 
+ * @param req - Express request object containing the account ID in the URL parameters.
+ * @param res - Express response object to send the response.
+ * 
+ * @returns A JSON response with the account details and its movements if found,
+ * or an error message if the account is not found.
+ */
 export const getMovementsByAccountId = (req: Request, res: Response) => {
   const accountId: number = parseInt(req.params.accountId);
   const account: Account | undefined = AccountModel.findById(accountId);
@@ -16,8 +23,7 @@ export const getMovementsByAccountId = (req: Request, res: Response) => {
     status = HTTP_STATUS.NOT_FOUND;
     data = { message: ERROR_MESSAGES.ACCOUNT_NOT_FOUND };
   } else {
-    const accountMovements: Movement[] =
-      MovementModel.findByAccountId(accountId);
+    const accountMovements: Movement[] = MovementModel.findByAccountId(accountId);
     status = HTTP_STATUS.OK;
     data = account;
     data.movements = accountMovements;
@@ -26,6 +32,15 @@ export const getMovementsByAccountId = (req: Request, res: Response) => {
   res.status(status).json(data);
 };
 
+/**
+ * Get movements for a specific account belonging to a client.
+ * 
+ * @param req - Express request object containing the client ID and account ID in the URL parameters.
+ * @param res - Express response object to send the response.
+ * 
+ * @returns A JSON response with the client details, and the account along with its movements if both are found,
+ * or error messages if the client or account are not found.
+ */
 export const getMovementsForClientAccount = (req: Request, res: Response) => {
   const clientId: number = parseInt(req.params.clientId);
   const accountId: number = parseInt(req.params.accountId);
@@ -42,19 +57,26 @@ export const getMovementsForClientAccount = (req: Request, res: Response) => {
       status = HTTP_STATUS.NOT_FOUND;
       data = { message: ERROR_MESSAGES.ACCOUNT_NOT_FOUND };
     } else {
-      const accountMovements: Movement[] | undefined =
-        MovementModel.findByAccountId(accountId);
-      const auxData: any = account;
-      auxData.movements = accountMovements;
+      const accountMovements: Movement[] | undefined = MovementModel.findByAccountId(accountId);
+      
+      account.movements = accountMovements;
       data = client;
-      data.accounts = auxData;
+      data.accounts = [account];
     }
   }
 
   res.status(status).json(data);
 };
 
-// Crear un nuevo movimiento para una cuenta
+/**
+ * Create a new movement for a specific account. This method modify the balance of the account adding or substracting the quantity value of the movement.
+ * 
+ * @param req - Express request object containing the account ID in the URL parameters and movement details in the request body.
+ * @param res - Express response object to send the response.
+ * 
+ * @returns A JSON response with the updated account details if the movement is created successfully,
+ * or an error message if the account is not found, movement creation fails, or balance update fails.
+ */
 export const createMovement = (req: Request, res: Response) => {
   const accountId: number = parseInt(req.params.accountId);
   const account: Account | undefined = AccountModel.findById(accountId);
@@ -72,7 +94,6 @@ export const createMovement = (req: Request, res: Response) => {
       accountId,
     });
     if (!newMovement) {
-      console.log(3);
       status = HTTP_STATUS.BAD_REQUEST;
       data = { message: ERROR_MESSAGES.VALIDATION_FAILED };
     } else {
@@ -90,7 +111,15 @@ export const createMovement = (req: Request, res: Response) => {
   res.status(status).json(data);
 };
 
-// Eliminar un movimiento
+/**
+ * Delete a specific movement.
+ * 
+ * @param req - Express request object containing the movement ID in the URL parameters.
+ * @param res - Express response object to send the response.
+ * 
+ * @returns An empty response with a status of 204 (No Content) if the movement is successfully deleted,
+ * or an error message if the movement is not found or the deletion fails.
+ */
 export const deleteMovement = (req: Request, res: Response) => {
   const movementId: number = parseInt(req.params.movementId);
   const movement: Movement | undefined = MovementModel.findById(movementId);
