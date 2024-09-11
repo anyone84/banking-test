@@ -1,15 +1,18 @@
 import { MovementModel, Movement } from '../src/models/movement';
-import { AccountModel } from '../src/models/account';
-
+import { AccountModel, Account } from '../src/models/account';
+import { ClientModel, Client} from '../src/models/client'
 
 describe('MovementModel', () => {
   beforeEach(() => {
+    ClientModel.delete(1);
     MovementModel.delete(1);
     AccountModel.delete(1);
   });
 
   describe('validate', () => {
     it('should return true for valid movement data', () => {
+      const validClient: Client | undefined = ClientModel.create({ name: 'Client', email: 'client@example.com', phone: '1234567890' });
+      const validAccount: Account | undefined = AccountModel.create({ accountNumber: '123456', balance: 1000, clientId: 1});
       const validMovement: Partial<Movement> = {
         quantity: 500,
         date: Date.now(),
@@ -32,6 +35,8 @@ describe('MovementModel', () => {
 
   describe('create', () => {
     it('should create and return a new movement', () => {
+      const validClient: Client | undefined = ClientModel.create({ name: 'Client', email: 'client@example.com', phone: '1234567890' });
+      const validAccount: Account | undefined = AccountModel.create({ accountNumber: '123456', balance: 1000, clientId: 1});
       const movementData: Movement = {
         quantity: 500,
         date: Date.now(),
@@ -59,6 +64,8 @@ describe('MovementModel', () => {
 
   describe('delete', () => {
     it('should delete an existing movement', () => {
+      const validClient: Client | undefined = ClientModel.create({ name: 'Client', email: 'client@example.com', phone: '1234567890' });
+      const validAccount: Account | undefined = AccountModel.create({ accountNumber: '123456', balance: 1000, clientId: 1});
       const movement: Movement = {
         id: 1,
         quantity: 500,

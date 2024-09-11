@@ -9,218 +9,87 @@ import {
 import { getAccountsByClientId, createAccount } from '../controllers/accountController';
 import { getMovementsForClientAccount } from '../controllers/movementController';
 
-const router = Router();
+const router: Router = Router();
 
 /**
- * @swagger
- * tags:
- *   name: Clients
- *   description: Operations related to clients
- */
-
-/**
- * @swagger
- * /clients:
- *   get:
- *     summary: Get all clients
- *     tags: [Clients]
- *     responses:
- *       200:
- *         description: List of all clients
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Client'
+ * @route GET /clients
+ * @group Clients - Operations related to clients
+ * @summary Get all clients
+ * @returns {array<Client>} 200 - List of all clients
+ * @returns {Error}  default - Unexpected error
  */
 router.get('/clients', getClients);
 
 /**
- * @swagger
- * /clients/{id}:
- *   get:
- *     summary: Get a client by ID
- *     tags: [Clients]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: The client ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: The client with the specified ID
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Client'
- *       404:
- *         description: Client not found
+ * @route GET /clients/{id}
+ * @group Clients - Operations related to clients
+ * @param {integer} id.path.required - The client ID
+ * @summary Get a client by ID
+ * @returns {Client} 200 - The client with the specified ID
+ * @returns {Error} 404 - Client not found
  */
 router.get('/clients/:id', getClientById);
 
 /**
- * @swagger
- * /clients:
- *   post:
- *     summary: Create a new client
- *     tags: [Clients]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Client'
- *     responses:
- *       201:
- *         description: The created client
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Client'
- *       400:
- *         description: Invalid input
+ * @route POST /clients
+ * @group Clients - Operations related to clients
+ * @param {Client} client.body.required - Client data to create
+ * @summary Create a new client
+ * @returns {Client} 201 - The created client
+ * @returns {Error} 400 - Invalid input
  */
 router.post('/clients', createClient);
 
 /**
- * @swagger
- * /clients/{id}:
- *   put:
- *     summary: Update an existing client
- *     tags: [Clients]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: The client ID
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Client'
- *     responses:
- *       200:
- *         description: The updated client
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Client'
- *       404:
- *         description: Client not found
+ * @route PUT /clients/{id}
+ * @group Clients - Operations related to clients
+ * @param {integer} id.path.required - The client ID
+ * @param {Client} client.body.required - Client data to update
+ * @summary Update an existing client
+ * @returns {Client} 200 - The updated client
+ * @returns {Error} 404 - Client not found
  */
 router.put('/clients/:id', updateClient);
 
 /**
- * @swagger
- * /clients/{id}:
- *   delete:
- *     summary: Delete a client
- *     tags: [Clients]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: The client ID
- *         schema:
- *           type: integer
- *     responses:
- *       204:
- *         description: Client deleted
- *       404:
- *         description: Client not found
+ * @route DELETE /clients/{id}
+ * @group Clients - Operations related to clients
+ * @param {integer} id.path.required - The client ID
+ * @summary Delete a client
+ * @returns {void} 204 - Client deleted
+ * @returns {Error} 404 - Client not found
  */
 router.delete('/clients/:id', deleteClient);
 
 /**
- * @swagger
- * /clients/{clientId}/accounts:
- *   get:
- *     summary: Get all accounts for a client
- *     tags: [Clients]
- *     parameters:
- *       - name: clientId
- *         in: path
- *         required: true
- *         description: The client ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: List of accounts for the specified client
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Account'
+ * @route GET /clients/{clientId}/accounts
+ * @group Clients - Operations related to clients
+ * @param {integer} clientId.path.required - The client ID
+ * @summary Get all accounts for a client
+ * @returns {array<Account>} 200 - List of accounts for the specified client
+ * @returns {Error}  default - Unexpected error
  */
 router.get('/clients/:clientId/accounts', getAccountsByClientId);
 
 /**
- * @swagger
- * /clients/{clientId}/accounts:
- *   post:
- *     summary: Create an account for a client
- *     tags: [Clients]
- *     parameters:
- *       - name: clientId
- *         in: path
- *         required: true
- *         description: The client ID
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Account'
- *     responses:
- *       201:
- *         description: The created account
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Account'
- *       400:
- *         description: Invalid input
+ * @route POST /clients/{clientId}/accounts
+ * @group Clients - Operations related to clients
+ * @param {integer} clientId.path.required - The client ID
+ * @param {Account} account.body.required - Account data to create
+ * @summary Create an account for a client
+ * @returns {Account} 201 - The created account
+ * @returns {Error} 400 - Invalid input
  */
 router.post('/clients/:clientId/accounts', createAccount);
 
 /**
- * @swagger
- * /clients/{clientId}/accounts/{accountId}/movements:
- *   get:
- *     summary: Get all movements for a client's account
- *     tags: [Clients]
- *     parameters:
- *       - name: clientId
- *         in: path
- *         required: true
- *         description: The client ID
- *         schema:
- *           type: integer
- *       - name: accountId
- *         in: path
- *         required: true
- *         description: The account ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: List of movements for the specified account
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Movement'
+ * @route GET /clients/{clientId}/accounts/{accountId}/movements
+ * @group Clients - Operations related to clients
+ * @param {integer} clientId.path.required - The client ID
+ * @param {integer} accountId.path.required - The account ID
+ * @summary Get all movements for a client's account
+ * @returns {array<Movement>} 200 - List of movements for the specified account
+ * @returns {Error}  default - Unexpected error
  */
 router.get('/clients/:clientId/accounts/:accountId/movements', getMovementsForClientAccount);
 

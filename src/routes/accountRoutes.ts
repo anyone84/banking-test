@@ -5,117 +5,44 @@ import { getMovementsByAccountId, createMovement } from '../controllers/movement
 const router = Router();
 
 /**
- * @swagger
- * tags:
- *   name: Accounts
- *   description: Operations related to accounts
- */
-
-/**
- * @swagger
- * /accounts/{accountId}:
- *   put:
- *     summary: Update an account
- *     tags: [Accounts]
- *     parameters:
- *       - name: accountId
- *         in: path
- *         required: true
- *         description: The account ID
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Account'
- *     responses:
- *       200:
- *         description: The updated account
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Account'
- *       404:
- *         description: Account not found
+ * @route PUT /accounts/{accountId}
+ * @group Accounts - Operations related to accounts
+ * @param {integer} accountId.path.required - The account ID
+ * @param {Account} account.body.required - Account data to update
+ * @summary Update an account
+ * @returns {Account} 200 - The updated account
+ * @returns {Error} 404 - Account not found
  */
 router.put('/accounts/:accountId', updateAccount);
 
 /**
- * @swagger
- * /accounts/{accountId}:
- *   delete:
- *     summary: Delete an account
- *     tags: [Accounts]
- *     parameters:
- *       - name: accountId
- *         in: path
- *         required: true
- *         description: The account ID
- *         schema:
- *           type: integer
- *     responses:
- *       204:
- *         description: Account deleted
- *       404:
- *         description: Account not found
+ * @route DELETE /accounts/{accountId}
+ * @group Accounts - Operations related to accounts
+ * @param {integer} accountId.path.required - The account ID
+ * @summary Delete an account
+ * @returns {void} 204 - Account deleted
+ * @returns {Error} 404 - Account not found
  */
 router.delete('/accounts/:accountId', deleteAccount);
 
 /**
- * @swagger
- * /accounts/{accountId}/movements:
- *   get:
- *     summary: Get all movements for an account
- *     tags: [Accounts]
- *     parameters:
- *       - name: accountId
- *         in: path
- *         required: true
- *         description: The account ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: List of movements for the specified account
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Movement'
+ * @route GET /accounts/{accountId}/movements
+ * @group Accounts - Operations related to accounts
+ * @param {integer} accountId.path.required - The account ID
+ * @summary Get all movements for an account
+ * @returns {array<Movement>} 200 - List of movements for the specified account
+ * @returns {Error}  default - Unexpected error
  */
 router.get('/accounts/:accountId/movements', getMovementsByAccountId);
 
 /**
- * @swagger
- * /accounts/{accountId}/movements:
- *   post:
- *     summary: Create a movement for an account
- *     tags: [Accounts]
- *     parameters:
- *       - name: accountId
- *         in: path
- *         required: true
- *         description: The account ID
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Movement'
- *     responses:
- *       201:
- *         description: The created movement
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Movement'
- *       400:
- *         description: Invalid input
+ * @route POST /accounts/{accountId}/movements
+ * @group Accounts - Operations related to accounts
+ * @param {integer} accountId.path.required - The account ID
+ * @param {Movement} movement.body.required - Movement data to create
+ * @summary Create a movement for an account
+ * @returns {Movement} 201 - The created movement
+ * @returns {Error} 400 - Invalid input
  */
 router.post('/accounts/:accountId/movements', createMovement);
 

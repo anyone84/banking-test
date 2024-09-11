@@ -4,30 +4,12 @@ import { deleteMovement } from '../controllers/movementController';
 const router = Router();
 
 /**
- * @swagger
- * tags:
- *   name: Movements
- *   description: Operations related to movements
- */
-
-/**
- * @swagger
- * /movements/{movementId}:
- *   delete:
- *     summary: Delete a movement
- *     tags: [Movements]
- *     parameters:
- *       - name: movementId
- *         in: path
- *         required: true
- *         description: The movement ID
- *         schema:
- *           type: integer
- *     responses:
- *       204:
- *         description: Movement deleted
- *       404:
- *         description: Movement not found
+ * @route DELETE /movements/{movementId}
+ * @group Movements - Operations related to movements
+ * @param {integer} movementId.path.required - The movement ID
+ * @summary Delete a movement
+ * @returns {void} 204 - Movement deleted
+ * @returns {Error} 404 - Movement not found
  */
 router.delete('/movements/:movementId', deleteMovement);
 
